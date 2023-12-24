@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="text-center mt-3">
                                             <button type="submit" class="btn btn-block btn-lg btn-primary my-3">Sign in</button>
-                                            <a href="{{route('register')}}" class="text-decoration-non">Belum memiliki akun ? Register</a>
+                                            {{-- <a href="{{route('register')}}" class="text-decoration-non">Belum memiliki akun ? Register</a> --}}
                                         </div>
                                     </form>
                                 </div>
