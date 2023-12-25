@@ -28,14 +28,23 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         if(Auth::user()->role == 1) {
-            $class = Classroom::
-                join('members as m2','m2.classroom_id','=','classrooms.id')
-                ->select('classrooms.*', DB::raw('COUNT(m2.id) as count'))
-                ->groupBy(DB::raw('classrooms.id'))
-                ->get();
+            $year = $request->year ?? date('Y');
+            $class = Classroom::whereYear('created_at', $year)->count();
+            $user = User::whereYear('created_at', $year)->count();
+            $assignment = Content::where('type', 'ASSIGNMENT')->whereYear('created_at', $year)->count();
+            $announcement = Content::where('type', 'ANNOUNCEMENT')->whereYear('created_at', $year)->count();
+            $countAdmin = User::where('role', 1)->whereYear('created_at', $year)->count();
+            $countDosen = User::where('role', 2)->whereYear('created_at', $year)->count();
+            $countMahasiswa = User::where('role', 3)->whereYear('created_at', $year)->count();
+            $chartTugas = [];
+            for($i = 1; $i <= 12; $i++) {
+                $count = Content::where('type', 'ASSIGNMENT')->whereMonth('created_at', $i)->whereYear('created_at', $year)->count();
+                array_push($chartTugas, $count);
+            }
+            return view('home', compact('year', 'class', 'user', 'assignment', 'announcement', 'countAdmin', 'countDosen', 'countMahasiswa', 'chartTugas'));
         } else {
             $class = Classroom::
                 join('members','members.classroom_id','=','classrooms.id')
@@ -44,8 +53,8 @@ class HomeController extends Controller
                 ->select('classrooms.*', DB::raw('COUNT(m2.id) as count'))
                 ->groupBy(DB::raw('classrooms.id'))
                 ->get();
+            return view('welcome', compact('class'));
         }
-        return view('welcome', compact('class'));
     }
 
     public function tasklist()
