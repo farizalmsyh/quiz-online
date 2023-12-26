@@ -49,7 +49,8 @@
                             </div>
                             <div class="form-group col-lg-6 mb-2">
                                 <label for="">Role</label>
-                                <select name="role" class="form-control @error('password') is-invalid @enderror" disabled>
+                                <input type="hidden" name="role" value="{{$user->role}}">
+                                <select class="form-control @error('password') is-invalid @enderror" disabled>
                                     <option value="1" @if($user->role == 1) selected @endif>Administrator</option>
                                     <option value="2" @if($user->role == 2) selected @endif>Dosen</option>
                                     <option value="3" @if($user->role == 3) selected @endif>Mahasiswa</option>
